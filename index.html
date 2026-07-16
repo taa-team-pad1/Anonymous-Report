@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=no">
-<title>Vorfall melden - TAA-Team</title>
+<title>Report / Melden - TAA-Team</title>
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
 body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;background:#f0f2f5;min-height:100vh;display:flex;flex-direction:column;align-items:center;padding:16px}
@@ -17,7 +17,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Ar
 .field textarea{resize:vertical;min-height:120px}
 .field .help{font-size:.72rem;color:#888;margin-top:3px}
 .urgency-group{display:flex;gap:6px}
-.urgency-btn{flex:1;padding:9px;border-radius:8px;border:none;cursor:pointer;font-weight:600;font-size:.8rem;background:#f0f0f0;color:#555}
+.urgency-btn{flex:1;padding:9px;border-radius:8px;border:none;cursor:pointer;font-weight:600;font-size:.8rem;background:#f0f0f0;color:#555;transition:all .2s}
 .urgency-btn.active-low{background:#4caf50;color:#fff}
 .urgency-btn.active-medium{background:#ff9800;color:#fff}
 .urgency-btn.active-high{background:#f44336;color:#fff}
@@ -27,7 +27,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Ar
 .photo-thumb{position:relative;width:60px;height:60px;border-radius:6px;overflow:hidden}
 .photo-thumb img{width:100%;height:100%;object-fit:cover}
 .photo-thumb .remove{position:absolute;top:2px;right:2px;width:18px;height:18px;border-radius:50%;border:none;background:rgba(0,0,0,.6);color:#fff;font-size:.65rem;cursor:pointer;display:flex;align-items:center;justify-content:center}
-.submit-btn{width:100%;padding:14px;border-radius:10px;border:none;background:#1a1a2e;color:#fff;font-size:.95rem;font-weight:600;cursor:pointer;margin-top:8px}
+.submit-btn{width:100%;padding:14px;border-radius:10px;border:none;background:#232f3e;color:#fff;font-size:.95rem;font-weight:600;cursor:pointer;margin-top:8px;transition:opacity .2s}
 .submit-btn:disabled{opacity:.5;cursor:not-allowed}
 .submit-btn.sending{opacity:.7;cursor:wait}
 .success{text-align:center;padding:24px 16px}
@@ -39,54 +39,200 @@ body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Ar
 .success .ref-value{font-size:1rem;font-weight:700;color:#1a1a2e;font-family:monospace}
 .success .note{font-size:.75rem;color:#888;margin-bottom:20px}
 .success .new-btn{padding:10px 20px;border-radius:8px;border:2px solid #1a1a2e;background:transparent;color:#1a1a2e;font-size:.85rem;font-weight:600;cursor:pointer}
-.error-msg{color:#c62828;font-size:.82rem;text-align:center;margin-top:10px}
-.footer{margin-top:16px;text-align:center;font-size:.7rem;color:#999}
+.error-msg{background:#ffebee;color:#c62828;padding:10px 14px;border-radius:8px;font-size:.82rem;margin-top:10px;text-align:center;display:none}
+.privacy{margin-top:16px;padding:14px;background:#f8f9fa;border-radius:8px;border:1px solid #e0e0e0}
+.privacy summary{font-size:.78rem;color:#555;cursor:pointer;font-weight:600}
+.privacy p{font-size:.72rem;color:#666;line-height:1.6;margin-top:8px}
+.footer{margin-top:16px;text-align:center;font-size:.7rem;color:#999;max-width:500px}
 .char-count{text-align:right;font-size:.72rem;color:#888;margin-top:3px}
+.amazon-bar{background:#232f3e;padding:10px 20px;width:100%;max-width:500px;border-radius:10px 10px 0 0;margin-bottom:0;display:flex;align-items:center;gap:10px}
+.amazon-bar .logo{color:#ff9900;font-weight:700;font-size:1rem}
+.amazon-bar .label{color:#fff;font-size:.8rem;opacity:.9}
+/* Language Selection */
+.lang-screen{text-align:center;padding:40px 20px}
+.lang-screen h2{font-size:1.3rem;color:#1a1a2e;margin-bottom:8px}
+.lang-screen p{font-size:.85rem;color:#666;margin-bottom:28px}
+.lang-buttons{display:flex;flex-direction:column;gap:14px;max-width:280px;margin:0 auto}
+.lang-btn{display:flex;align-items:center;justify-content:center;gap:12px;padding:18px 24px;border-radius:12px;border:2px solid #e0e0e0;background:#fff;cursor:pointer;transition:all .2s;font-size:1.1rem;font-weight:600;color:#1a1a2e}
+.lang-btn:hover{border-color:#ff9900;background:#fff8ee;transform:scale(1.02)}
+.lang-btn .flag{font-size:2rem}
+.lang-btn .lang-name{font-size:1rem}
+.lang-switch{position:absolute;top:12px;right:16px;background:none;border:none;font-size:.8rem;color:#fff;cursor:pointer;opacity:.8}
+.lang-switch:hover{opacity:1}
 </style>
 </head>
 <body>
-<div class="card" id="form-view">
-<div class="header"><h1>Vorfall melden</h1><p>Melden Sie den Vorfall vertraulich an das TAA-Team.</p></div>
-<div class="field"><label>Ihr Login / Alias *</label><input type="text" id="login"><div class="help">Damit wir dich bei Rückfragen kontaktieren können</div></div>
-<div class="field"><label>Kategorie *</label><select id="category"><option value="">-- Bitte wählen --</option><option value="Betrug / Korruption">Betrug / Korruption</option><option value="Diskriminierung / Belästigung">Diskriminierung / Belästigung</option><option value="Datenschutzverletzung">Datenschutzverletzung</option><option value="Sicherheitsrisiko">Sicherheitsrisiko</option><option value="Umweltverstöße">Umweltverstöße</option><option value="Compliance-Verstoß">Compliance-Verstoß</option><option value="Mobbing">Mobbing</option><option value="Sonstiges">Sonstiges</option></select></div>
-<div class="field"><label>Dringlichkeit</label><div class="urgency-group"><button class="urgency-btn" data-val="low" onclick="setUrgency('low')">Niedrig</button><button class="urgency-btn active-medium" data-val="medium" onclick="setUrgency('medium')">Mittel</button><button class="urgency-btn" data-val="high" onclick="setUrgency('high')">Hoch</button></div></div>
-<div class="field"><label>Was ist vorgefallen? *</label><textarea id="description" placeholder="Beschreiben Sie den Vorfall so detailliert wie möglich: Was ist passiert? Wann? Wo? Wer war beteiligt?" oninput="updateCharCount()"></textarea><div class="char-count" id="char-count">0 / 3000 Zeichen</div></div>
-<div class="field"><label>Foto (optional)</label><div class="photo-actions"><button class="photo-btn" onclick="document.getElementById('camera-input').click()">Foto aufnehmen</button><button class="photo-btn" onclick="document.getElementById('file-input').click()">Aus Galerie</button></div><input type="file" id="camera-input" accept="image/*" capture="environment" style="display:none" onchange="handlePhoto(this)"><input type="file" id="file-input" accept="image/*" multiple style="display:none" onchange="handlePhoto(this)"><div class="photo-grid" id="photo-grid"></div><div class="help">Max. 5 MB pro Bild.</div></div>
-<button class="submit-btn" id="submit-btn" onclick="submitReport()" disabled>An TAA-Team melden</button>
-<p class="error-msg" id="error-msg" style="display:none"></p>
+
+<!-- LANGUAGE SELECTION SCREEN -->
+<div class="card" id="lang-screen">
+<div class="lang-screen">
+<div style="font-size:2.5rem;margin-bottom:12px">\u{1F6E1}\uFE0F</div>
+<h2>TAA-Team</h2>
+<p>Confidential Reporting System<br>Vertrauliches Hinweisgebersystem</p>
+<div class="lang-buttons">
+<button class="lang-btn" onclick="setLang('en')"><span class="flag">\u{1F1EC}\u{1F1E7}</span><span class="lang-name">English</span></button>
+<button class="lang-btn" onclick="setLang('de')"><span class="flag">\u{1F1E9}\u{1F1EA}</span><span class="lang-name">Deutsch</span></button>
 </div>
-<div class="card" id="success-view" style="display:none"><div class="success"><div class="check">&#10003;</div><h3>Meldung erfolgreich übermittelt</h3><p>Ihre Meldung wurde sicher an das TAA-Team gesendet.</p><div class="ref-box"><span class="ref-label">Referenz-Nr:</span><span class="ref-value" id="ref-id"></span></div><div class="note">Notieren Sie diese Referenznummer für Rückfragen.</div><button class="new-btn" onclick="resetForm()">Neue Meldung erstellen</button></div></div>
-<div class="footer"><p>Dieses System entspricht den Anforderungen des Hinweisgeberschutzgesetzes (HinSchG)</p></div>
+</div>
+</div>
+
+<!-- MAIN FORM (hidden until language selected) -->
+<div class="amazon-bar" id="amazon-bar" style="display:none"><span class="logo">TAA-Team</span><span class="label" id="bar-label">Vertrauliches Hinweisgebersystem</span><button class="lang-switch" id="lang-switch" onclick="showLangScreen()">\u{1F1EC}\u{1F1E7}/\u{1F1E9}\u{1F1EA}</button></div>
+<div class="card" id="form-view" style="border-radius:0 0 16px 16px;margin-top:0;display:none">
+<div class="header"><h1 id="form-title">Vorfall melden</h1><p id="form-subtitle">Melden Sie den Vorfall vertraulich an das TAA-Team.</p></div>
+<div class="field"><label id="lbl-login">Ihr Login / Alias *</label><input type="text" id="login"><div class="help" id="help-login">Damit wir bei R\u00fcckfragen Kontakt aufnehmen k\u00f6nnen</div></div>
+<div class="field"><label id="lbl-category">Kategorie *</label><select id="category"><option value="" id="opt-default">-- Bitte w\u00e4hlen --</option></select></div>
+<div class="field"><label id="lbl-urgency">Dringlichkeit</label><div class="urgency-group"><button class="urgency-btn" id="urg-low" data-val="low" onclick="setUrgency('low')">Niedrig</button><button class="urgency-btn active-medium" id="urg-medium" data-val="medium" onclick="setUrgency('medium')">Mittel</button><button class="urgency-btn" id="urg-high" data-val="high" onclick="setUrgency('high')">Hoch</button></div></div>
+<div class="field"><label id="lbl-desc">Was ist vorgefallen? *</label><textarea id="description" oninput="updateCharCount()"></textarea><div class="char-count" id="char-count">0 / 3000</div></div>
+<div class="field"><label id="lbl-photo">Foto (optional)</label><div class="photo-actions"><button class="photo-btn" id="btn-camera" onclick="document.getElementById('camera-input').click()">Foto aufnehmen</button><button class="photo-btn" id="btn-gallery" onclick="document.getElementById('file-input').click()">Aus Galerie</button></div><input type="file" id="camera-input" accept="image/*" capture="environment" style="display:none" onchange="handlePhoto(this)"><input type="file" id="file-input" accept="image/*" multiple style="display:none" onchange="handlePhoto(this)"><div class="photo-grid" id="photo-grid"></div><div class="help" id="help-photo">Max. 5 MB pro Bild.</div></div>
+<button class="submit-btn" id="submit-btn" onclick="submitReport()" disabled>An TAA-Team melden</button>
+<div class="error-msg" id="error-msg"></div>
+<details class="privacy"><summary id="privacy-title">Datenschutzhinweis</summary><p id="privacy-text">Ihre Meldung wird verschl\u00fcsselt (HTTPS) an einen EU-konformen Server \u00fcbermittelt und direkt als E-Mail an das TAA-Team weitergeleitet. Es werden keine Daten gespeichert. Es erfolgt kein Tracking, keine IP-Protokollierung und keine Weitergabe an Dritte. Die Verarbeitung erfolgt gem\u00e4\u00df Art. 6 Abs. 1 lit. f DSGVO (berechtigtes Interesse: Hinweisgeberschutz) sowie \u00a7\u00a7 84/85 BetrVG. Rechtsgrundlage: Hinweisgeberschutzgesetz (HinSchG).</p></details>
+</div>
+<div class="card" id="success-view" style="display:none"><div class="success"><div class="check">\u2713</div><h3 id="success-title">Meldung erfolgreich \u00fcbermittelt</h3><p id="success-text">Ihre Meldung wurde sicher an das TAA-Team gesendet.</p><div class="ref-box"><span class="ref-label" id="ref-label">Referenz-Nr:</span><span class="ref-value" id="ref-id"></span></div><div class="note" id="ref-note">Notieren Sie diese Referenznummer f\u00fcr R\u00fcckfragen.</div><button class="new-btn" id="new-btn" onclick="resetForm()">Neue Meldung erstellen</button></div></div>
+<div class="footer" id="footer"><p>Dieses System entspricht den Anforderungen des Hinweisgeberschutzgesetzes (HinSchG).<br>Betrieben vom TAA-Team. Keine Daten werden gespeichert.</p></div>
+
 <script>
-var urgency="medium";var photos=[];
+var WORKER_URL="https://anonymous-report.birolyb.workers.dev";
+var urgency="medium";var photos=[];var lang="de";
+
+// ===== TRANSLATIONS =====
+var T={
+de:{
+  barLabel:"Vertrauliches Hinweisgebersystem",
+  formTitle:"Vorfall melden",
+  formSubtitle:"Melden Sie den Vorfall vertraulich an das TAA-Team.",
+  lblLogin:"Ihr Login / Alias *",
+  helpLogin:"Damit wir bei R\u00fcckfragen Kontakt aufnehmen k\u00f6nnen",
+  lblCategory:"Kategorie *",
+  optDefault:"-- Bitte w\u00e4hlen --",
+  categories:["Betrug / Korruption","Diskriminierung / Bel\u00e4stigung","Datenschutzverletzung","Sicherheitsrisiko","Umweltverst\u00f6\u00dfe","Compliance-Versto\u00df","Mobbing","Sonstiges"],
+  lblUrgency:"Dringlichkeit",
+  urgLow:"Niedrig",urgMedium:"Mittel",urgHigh:"Hoch",
+  lblDesc:"Was ist vorgefallen? *",
+  descPlaceholder:"Beschreiben Sie den Vorfall so detailliert wie m\u00f6glich: Was ist passiert? Wann? Wo? Wer war beteiligt?",
+  lblPhoto:"Foto (optional)",
+  btnCamera:"Foto aufnehmen",btnGallery:"Aus Galerie",
+  helpPhoto:"Max. 5 MB pro Bild.",
+  submitBtn:"An TAA-Team melden",
+  sendingBtn:"Wird gesendet...",
+  errorSend:"Senden fehlgeschlagen. Bitte versuchen Sie es erneut.",
+  privacyTitle:"Datenschutzhinweis",
+  privacyText:"Ihre Meldung wird verschl\u00fcsselt (HTTPS) an einen EU-konformen Server \u00fcbermittelt und direkt als E-Mail an das TAA-Team weitergeleitet. Es werden keine Daten gespeichert. Es erfolgt kein Tracking, keine IP-Protokollierung und keine Weitergabe an Dritte. Die Verarbeitung erfolgt gem\u00e4\u00df Art. 6 Abs. 1 lit. f DSGVO (berechtigtes Interesse: Hinweisgeberschutz) sowie \u00a7\u00a7 84/85 BetrVG. Rechtsgrundlage: Hinweisgeberschutzgesetz (HinSchG).",
+  successTitle:"Meldung erfolgreich \u00fcbermittelt",
+  successText:"Ihre Meldung wurde sicher an das TAA-Team gesendet.",
+  refLabel:"Referenz-Nr:",
+  refNote:"Notieren Sie diese Referenznummer f\u00fcr R\u00fcckfragen.",
+  newBtn:"Neue Meldung erstellen",
+  footer:"Dieses System entspricht den Anforderungen des Hinweisgeberschutzgesetzes (HinSchG).<br>Betrieben vom TAA-Team. Keine Daten werden gespeichert."
+},
+en:{
+  barLabel:"Confidential Reporting System",
+  formTitle:"Report an Incident",
+  formSubtitle:"Report the incident confidentially to the TAA Team.",
+  lblLogin:"Your Login / Alias *",
+  helpLogin:"So we can contact you if we have questions",
+  lblCategory:"Category *",
+  optDefault:"-- Please select --",
+  categories:["Fraud / Corruption","Discrimination / Harassment","Data Privacy Violation","Safety Risk","Environmental Violations","Compliance Violation","Bullying","Other"],
+  lblUrgency:"Urgency",
+  urgLow:"Low",urgMedium:"Medium",urgHigh:"High",
+  lblDesc:"What happened? *",
+  descPlaceholder:"Describe the incident in as much detail as possible: What happened? When? Where? Who was involved?",
+  lblPhoto:"Photo (optional)",
+  btnCamera:"Take Photo",btnGallery:"From Gallery",
+  helpPhoto:"Max. 5 MB per image.",
+  submitBtn:"Report to TAA Team",
+  sendingBtn:"Sending...",
+  errorSend:"Sending failed. Please try again.",
+  privacyTitle:"Privacy Notice",
+  privacyText:"Your report is transmitted encrypted (HTTPS) to an EU-compliant server and forwarded directly as an email to the TAA Team. No data is stored. There is no tracking, no IP logging, and no disclosure to third parties. Processing is carried out in accordance with Art. 6 (1) (f) GDPR (legitimate interest: whistleblower protection) and \u00a7\u00a7 84/85 BetrVG. Legal basis: German Whistleblower Protection Act (HinSchG).",
+  successTitle:"Report Successfully Submitted",
+  successText:"Your report has been securely sent to the TAA Team.",
+  refLabel:"Reference No:",
+  refNote:"Please note this reference number for follow-up inquiries.",
+  newBtn:"Create New Report",
+  footer:"This system complies with the German Whistleblower Protection Act (HinSchG).<br>Operated by the TAA Team. No data is stored."
+}
+};
+
+function setLang(l){
+  lang=l;
+  document.getElementById("lang-screen").style.display="none";
+  document.getElementById("amazon-bar").style.display="flex";
+  document.getElementById("form-view").style.display="block";
+  applyTranslations();
+}
+function showLangScreen(){
+  document.getElementById("lang-screen").style.display="block";
+  document.getElementById("amazon-bar").style.display="none";
+  document.getElementById("form-view").style.display="none";
+  document.getElementById("success-view").style.display="none";
+}
+function applyTranslations(){
+  var t=T[lang];
+  document.getElementById("bar-label").textContent=t.barLabel;
+  document.getElementById("form-title").textContent=t.formTitle;
+  document.getElementById("form-subtitle").textContent=t.formSubtitle;
+  document.getElementById("lbl-login").textContent=t.lblLogin;
+  document.getElementById("help-login").textContent=t.helpLogin;
+  document.getElementById("lbl-category").textContent=t.lblCategory;
+  // Rebuild categories
+  var sel=document.getElementById("category");
+  sel.innerHTML='<option value="">'+t.optDefault+'</option>';
+  t.categories.forEach(function(c){sel.innerHTML+='<option value="'+c+'">'+c+'</option>'});
+  document.getElementById("lbl-urgency").textContent=t.lblUrgency;
+  document.getElementById("urg-low").textContent=t.urgLow;
+  document.getElementById("urg-medium").textContent=t.urgMedium;
+  document.getElementById("urg-high").textContent=t.urgHigh;
+  document.getElementById("lbl-desc").textContent=t.lblDesc;
+  document.getElementById("description").placeholder=t.descPlaceholder;
+  document.getElementById("lbl-photo").textContent=t.lblPhoto;
+  document.getElementById("btn-camera").textContent=t.btnCamera;
+  document.getElementById("btn-gallery").textContent=t.btnGallery;
+  document.getElementById("help-photo").textContent=t.helpPhoto;
+  document.getElementById("submit-btn").textContent=t.submitBtn;
+  document.getElementById("privacy-title").textContent=t.privacyTitle;
+  document.getElementById("privacy-text").textContent=t.privacyText;
+  document.getElementById("success-title").textContent=t.successTitle;
+  document.getElementById("success-text").textContent=t.successText;
+  document.getElementById("ref-label").textContent=t.refLabel;
+  document.getElementById("ref-note").textContent=t.refNote;
+  document.getElementById("new-btn").textContent=t.newBtn;
+  document.getElementById("footer").innerHTML="<p>"+t.footer+"</p>";
+}
+
 function setUrgency(v){urgency=v;document.querySelectorAll(".urgency-btn").forEach(function(b){b.className="urgency-btn";if(b.dataset.val===v)b.classList.add("active-"+v)})}
-function updateCharCount(){var d=document.getElementById("description").value;document.getElementById("char-count").textContent=d.length+" / 3000 Zeichen";validateForm()}
+function updateCharCount(){var d=document.getElementById("description").value;document.getElementById("char-count").textContent=d.length+" / 3000";validateForm()}
 function validateForm(){var l=document.getElementById("login").value.trim();var c=document.getElementById("category").value;var d=document.getElementById("description").value.trim();document.getElementById("submit-btn").disabled=!(l&&c&&d)}
 document.addEventListener("input",validateForm);document.addEventListener("change",validateForm);
 function handlePhoto(input){var files=input.files;if(!files)return;Array.from(files).forEach(function(f){if(f.size>5*1024*1024)return;var r=new FileReader();r.onload=function(e){photos.push(e.target.result);renderPhotos()};r.readAsDataURL(f)});input.value=""}
 function renderPhotos(){document.getElementById("photo-grid").innerHTML=photos.map(function(p,i){return '<div class="photo-thumb"><img src="'+p+'"><button class="remove" onclick="removePhoto('+i+')">X</button></div>'}).join("")}
 function removePhoto(i){photos.splice(i,1);renderPhotos()}
-function submitReport(){
-var login=document.getElementById("login").value.trim();
-var category=document.getElementById("category").value;
-var description=document.getElementById("description").value.trim();
-var id="TAA-"+Date.now().toString(36).toUpperCase();
-var btn=document.getElementById("submit-btn");
-btn.disabled=true;btn.textContent="Wird gesendet...";btn.classList.add("sending");
-document.getElementById("error-msg").style.display="none";
-var data=new FormData();
-data.append("Referenz",id);
-data.append("Login",login);
-data.append("Kategorie",category);
-data.append("Dringlichkeit",urgency==="high"?"HOCH":urgency==="medium"?"Mittel":"Niedrig");
-data.append("Beschreibung",description);
-data.append("Datum",new Date().toLocaleString("de-DE"));
-data.append("Fotos_Anzahl",photos.length.toString());
-fetch("https://formspree.io/f/mbdndkdr",{method:"POST",body:data,headers:{"Accept":"application/json"}})
-.then(function(res){if(res.ok){document.getElementById("ref-id").textContent=id;document.getElementById("form-view").style.display="none";document.getElementById("success-view").style.display="block"}else{throw new Error("Fehler")}})
-.catch(function(){document.getElementById("error-msg").textContent="Senden fehlgeschlagen. Bitte versuchen Sie es erneut.";document.getElementById("error-msg").style.display="block";btn.disabled=false;btn.textContent="An TAA-Team melden";btn.classList.remove("sending")})
+function showError(msg){var el=document.getElementById("error-msg");el.textContent=msg;el.style.display="block";setTimeout(function(){el.style.display="none"},8000)}
+async function submitReport(){
+  var btn=document.getElementById("submit-btn");var t=T[lang];
+  var login=document.getElementById("login").value.trim();
+  var category=document.getElementById("category").value;
+  var description=document.getElementById("description").value.trim();
+  var id="TAA-"+Date.now().toString(36).toUpperCase();
+  btn.disabled=true;btn.textContent=t.sendingBtn;btn.classList.add("sending");
+  try{
+    var res=await fetch(WORKER_URL,{
+      method:"POST",
+      headers:{"Content-Type":"application/json"},
+      body:JSON.stringify({id:id,login:login,category:category,urgency:urgency,description:description,photoCount:photos.length,timestamp:new Date().toISOString(),lang:lang})
+    });
+    if(!res.ok)throw new Error("Server error: "+res.status);
+    document.getElementById("ref-id").textContent=id;
+    document.getElementById("form-view").style.display="none";
+    document.getElementById("success-view").style.display="block";
+  }catch(e){
+    showError(t.errorSend+" ("+e.message+")");
+    btn.disabled=false;btn.textContent=t.submitBtn;btn.classList.remove("sending");
+  }
 }
-function resetForm(){document.getElementById("login").value="";document.getElementById("category").value="";document.getElementById("description").value="";urgency="medium";setUrgency("medium");photos=[];renderPhotos();updateCharCount();document.getElementById("form-view").style.display="block";document.getElementById("success-view").style.display="none";document.getElementById("submit-btn").textContent="An TAA-Team melden";document.getElementById("submit-btn").classList.remove("sending")}
+function resetForm(){document.getElementById("login").value="";document.getElementById("category").value="";document.getElementById("description").value="";urgency="medium";setUrgency("medium");photos=[];renderPhotos();updateCharCount();document.getElementById("form-view").style.display="block";document.getElementById("success-view").style.display="none";document.getElementById("amazon-bar").style.display="flex"}
 </script>
 </body>
 </html>
