@@ -6,79 +6,81 @@
 <title>Report / Melden - TAA-Team</title>
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
-body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;background:#f0f2f5;min-height:100vh;display:flex;flex-direction:column;align-items:center;padding:16px}
-.card{background:#fff;border-radius:16px;box-shadow:0 4px 24px rgba(0,0,0,.08);padding:28px 20px;max-width:500px;width:100%;margin-top:8px}
-.header{text-align:center;margin-bottom:20px}
-.header h1{font-size:1.4rem;font-weight:700;color:#1a1a2e;margin-bottom:6px}
-.header p{font-size:.85rem;color:#666;line-height:1.4}
-.field{margin-bottom:16px}
-.field label{display:block;margin-bottom:5px;font-weight:600;font-size:.85rem;color:#333}
-.field input,.field select,.field textarea{width:100%;padding:10px 12px;border-radius:8px;border:1.5px solid #ddd;font-size:.9rem;outline:none;font-family:inherit}
-.field textarea{resize:vertical;min-height:120px}
-.field .help{font-size:.72rem;color:#888;margin-top:3px}
+body{font-family:"Amazon Ember",-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;background:#eaeded;min-height:100vh;display:flex;flex-direction:column;align-items:center;padding:0;font-size:13px;color:#0f1111;-webkit-font-smoothing:antialiased}
+.card{background:#fff;border-radius:0 0 8px 8px;box-shadow:0 2px 5px rgba(15,17,21,.15);padding:20px 16px;max-width:480px;width:100%;margin-top:0}
+.header{text-align:center;margin-bottom:16px}
+.header h1{font-size:15px;font-weight:700;color:#0f1111;margin-bottom:4px}
+.header p{font-size:12px;color:#565959;line-height:1.4}
+.field{margin-bottom:14px}
+.field label{display:block;margin-bottom:4px;font-weight:700;font-size:12px;color:#0f1111}
+.field input,.field select,.field textarea{width:100%;padding:8px 10px;border-radius:4px;border:1px solid #a6a6a6;font-size:13px;outline:none;font-family:inherit;background:#fff;box-shadow:0 1px 2px rgba(15,17,21,.15) inset}
+.field input:focus,.field select:focus,.field textarea:focus{border-color:#e77600;box-shadow:0 0 0 3px rgba(228,121,17,.5)}
+.field textarea{resize:vertical;min-height:100px}
+.field .help{font-size:11px;color:#565959;margin-top:2px}
 .urgency-group{display:flex;gap:6px}
-.urgency-btn{flex:1;padding:9px;border-radius:8px;border:none;cursor:pointer;font-weight:600;font-size:.8rem;background:#f0f0f0;color:#555;transition:all .2s}
-.urgency-btn.active-low{background:#4caf50;color:#fff}
-.urgency-btn.active-medium{background:#ff9800;color:#fff}
-.urgency-btn.active-high{background:#f44336;color:#fff}
-.photo-actions{display:flex;gap:8px;margin-bottom:8px}
-.photo-btn{flex:1;padding:11px;border-radius:8px;border:2px dashed #ccc;background:#fafafa;cursor:pointer;font-size:.82rem;font-weight:500;color:#555;text-align:center}
-.photo-grid{display:flex;gap:6px;flex-wrap:wrap;margin-top:8px;margin-bottom:4px}
-.photo-thumb{position:relative;width:60px;height:60px;border-radius:6px;overflow:hidden}
+.urgency-btn{flex:1;padding:7px 4px;border-radius:4px;border:1px solid #a6a6a6;cursor:pointer;font-weight:700;font-size:11px;background:#f0f2f2;color:#0f1111;transition:all .15s}
+.urgency-btn.active-low{background:#067d62;color:#fff;border-color:#067d62}
+.urgency-btn.active-medium{background:#e77600;color:#fff;border-color:#e77600}
+.urgency-btn.active-high{background:#b12704;color:#fff;border-color:#b12704}
+.photo-actions{display:flex;gap:6px;margin-bottom:6px}
+.photo-btn{flex:1;padding:9px;border-radius:4px;border:1px dashed #a6a6a6;background:#f7f8f8;cursor:pointer;font-size:11px;font-weight:600;color:#0f1111;text-align:center}
+.photo-grid{display:flex;gap:6px;flex-wrap:wrap;margin-top:6px;margin-bottom:4px}
+.photo-thumb{position:relative;width:48px;height:48px;border-radius:4px;overflow:hidden}
 .photo-thumb img{width:100%;height:100%;object-fit:cover}
-.photo-thumb .remove{position:absolute;top:2px;right:2px;width:18px;height:18px;border-radius:50%;border:none;background:rgba(0,0,0,.6);color:#fff;font-size:.65rem;cursor:pointer;display:flex;align-items:center;justify-content:center}
-.submit-btn{width:100%;padding:14px;border-radius:10px;border:none;background:#232f3e;color:#fff;font-size:.95rem;font-weight:600;cursor:pointer;margin-top:8px;transition:opacity .2s}
-.submit-btn:disabled{opacity:.5;cursor:not-allowed}
-.submit-btn.sending{opacity:.7;cursor:wait}
-.success{text-align:center;padding:24px 16px}
-.success .check{width:56px;height:56px;border-radius:50%;background:#4caf50;color:#fff;font-size:1.8rem;display:flex;align-items:center;justify-content:center;margin:0 auto 14px}
-.success h3{font-size:1.2rem;color:#1a1a2e;margin-bottom:6px}
-.success p{font-size:.88rem;color:#555;margin-bottom:16px}
-.success .ref-box{display:inline-flex;align-items:center;gap:8px;padding:10px 18px;background:#f5f5f5;border-radius:8px;margin-bottom:10px}
-.success .ref-label{font-size:.8rem;color:#888}
-.success .ref-value{font-size:1rem;font-weight:700;color:#1a1a2e;font-family:monospace}
-.success .note{font-size:.75rem;color:#888;margin-bottom:20px}
-.success .new-btn{padding:10px 20px;border-radius:8px;border:2px solid #1a1a2e;background:transparent;color:#1a1a2e;font-size:.85rem;font-weight:600;cursor:pointer}
-.error-msg{background:#ffebee;color:#c62828;padding:10px 14px;border-radius:8px;font-size:.82rem;margin-top:10px;text-align:center;display:none}
-.privacy{margin-top:16px;padding:14px;background:#f8f9fa;border-radius:8px;border:1px solid #e0e0e0}
-.privacy summary{font-size:.78rem;color:#555;cursor:pointer;font-weight:600}
-.privacy p{font-size:.72rem;color:#666;line-height:1.6;margin-top:8px}
-.footer{margin-top:16px;text-align:center;font-size:.7rem;color:#999;max-width:500px}
-.char-count{text-align:right;font-size:.72rem;color:#888;margin-top:3px}
-.amazon-bar{background:#232f3e;padding:10px 20px;width:100%;max-width:500px;border-radius:10px 10px 0 0;margin-bottom:0;display:flex;align-items:center;gap:10px}
-.amazon-bar .logo{color:#ff9900;font-weight:700;font-size:1rem}
-.amazon-bar .label{color:#fff;font-size:.8rem;opacity:.9}
+.photo-thumb .remove{position:absolute;top:1px;right:1px;width:16px;height:16px;border-radius:50%;border:none;background:rgba(0,0,0,.65);color:#fff;font-size:9px;cursor:pointer;display:flex;align-items:center;justify-content:center}
+.submit-btn{width:100%;padding:10px;border-radius:8px;border:none;background:#ffd814;color:#0f1111;font-size:13px;font-weight:700;cursor:pointer;margin-top:10px;box-shadow:0 2px 5px rgba(15,17,21,.15)}
+.submit-btn:hover{background:#f7ca00}
+.submit-btn:disabled{opacity:.4;cursor:not-allowed}
+.submit-btn.sending{opacity:.6;cursor:wait}
+.success{text-align:center;padding:20px 12px}
+.success .check{width:44px;height:44px;border-radius:50%;background:#067d62;color:#fff;font-size:1.4rem;display:flex;align-items:center;justify-content:center;margin:0 auto 12px}
+.success h3{font-size:14px;color:#0f1111;margin-bottom:4px}
+.success p{font-size:12px;color:#565959;margin-bottom:12px}
+.success .ref-box{display:inline-flex;align-items:center;gap:6px;padding:8px 14px;background:#f0f2f2;border-radius:4px;margin-bottom:8px}
+.success .ref-label{font-size:11px;color:#565959}
+.success .ref-value{font-size:13px;font-weight:700;color:#0f1111;font-family:monospace}
+.success .note{font-size:11px;color:#565959;margin-bottom:16px}
+.success .new-btn{padding:8px 16px;border-radius:8px;border:1px solid #a6a6a6;background:#fff;color:#0f1111;font-size:12px;font-weight:600;cursor:pointer}
+.error-msg{background:#fef0ef;color:#b12704;padding:8px 12px;border-radius:4px;font-size:11px;margin-top:8px;text-align:center;display:none;border:1px solid #fcccca}
+.privacy{margin-top:14px;padding:10px 12px;background:#f7f8f8;border-radius:4px;border:1px solid #d5d9d9}
+.privacy summary{font-size:11px;color:#565959;cursor:pointer;font-weight:700}
+.privacy p{font-size:10px;color:#565959;line-height:1.5;margin-top:6px}
+.footer{margin-top:12px;text-align:center;font-size:10px;color:#565959;max-width:480px;padding:0 16px}
+.char-count{text-align:right;font-size:10px;color:#565959;margin-top:2px}
+.amazon-bar{background:#232f3e;padding:10px 16px;width:100%;max-width:480px;border-radius:0;display:flex;align-items:center;gap:8px}
+.amazon-bar .logo{color:#ff9900;font-weight:700;font-size:14px;font-style:italic;letter-spacing:-.5px}
+.amazon-bar .label{color:rgba(255,255,255,.85);font-size:11px;font-weight:500}
 /* Language Selection */
-.lang-screen{text-align:center;padding:40px 20px}
-.lang-screen h2{font-size:1.3rem;color:#1a1a2e;margin-bottom:8px}
-.lang-screen p{font-size:.85rem;color:#666;margin-bottom:28px}
-.lang-buttons{display:flex;flex-direction:column;gap:14px;max-width:280px;margin:0 auto}
-.lang-btn{display:flex;align-items:center;justify-content:center;gap:12px;padding:18px 24px;border-radius:12px;border:2px solid #e0e0e0;background:#fff;cursor:pointer;transition:all .2s;font-size:1.1rem;font-weight:600;color:#1a1a2e}
-.lang-btn:hover{border-color:#ff9900;background:#fff8ee;transform:scale(1.02)}
-.lang-btn .flag{font-size:2rem}
-.lang-btn .lang-name{font-size:1rem}
-.lang-switch{position:absolute;top:12px;right:16px;background:none;border:none;font-size:.8rem;color:#fff;cursor:pointer;opacity:.8}
-.lang-switch:hover{opacity:1}
+.lang-screen{text-align:center;padding:28px 16px}
+.lang-screen h2{font-size:14px;color:#0f1111;margin-bottom:4px;font-weight:700}
+.lang-buttons{display:flex;flex-direction:column;gap:10px;max-width:260px;margin:0 auto}
+.lang-btn{display:flex;align-items:center;justify-content:center;gap:12px;padding:12px 20px;border-radius:8px;border:1px solid #d5d9d9;background:#fff;cursor:pointer;transition:all .15s;font-size:13px;font-weight:700;color:#0f1111;box-shadow:0 2px 5px rgba(15,17,21,.08)}
+.lang-btn:hover{border-color:#e77600;background:#fef8f2}
+.lang-btn:active{background:#fef0e4}
+.lang-btn .flag{display:flex;align-items:center}
+.lang-btn .lang-name{font-size:13px}
+.lang-switch{margin-left:auto;background:none;border:1px solid rgba(255,255,255,.25);border-radius:3px;padding:3px 8px;font-size:10px;color:rgba(255,255,255,.85);cursor:pointer;font-weight:600;letter-spacing:.3px}
+.lang-switch:hover{border-color:#ff9900;color:#ff9900}
 </style>
 </head>
 <body>
 
 <!-- LANGUAGE SELECTION SCREEN -->
+<div class="amazon-bar" id="lang-bar"><span class="logo">amazon</span><span class="label">TAA-Team</span></div>
 <div class="card" id="lang-screen">
 <div class="lang-screen">
-<div style="font-size:2.5rem;margin-bottom:12px">\u{1F6E1}\uFE0F</div>
-<h2>TAA-Team</h2>
-<p>Confidential Reporting System<br>Vertrauliches Hinweisgebersystem</p>
+<h2>Incident Report</h2>
+<p style="font-size:11px;color:#565959;margin-bottom:20px">Select your preferred language</p>
 <div class="lang-buttons">
-<button class="lang-btn" onclick="setLang('en')"><span class="flag">\u{1F1EC}\u{1F1E7}</span><span class="lang-name">English</span></button>
-<button class="lang-btn" onclick="setLang('de')"><span class="flag">\u{1F1E9}\u{1F1EA}</span><span class="lang-name">Deutsch</span></button>
+<button class="lang-btn" onclick="setLang('en')"><span class="flag"><svg width="24" height="16" viewBox="0 0 60 40"><rect width="60" height="40" fill="#012169"/><path d="M0,0 L60,40 M60,0 L0,40" stroke="#fff" stroke-width="5"/><path d="M0,0 L60,40 M60,0 L0,40" stroke="#C8102E" stroke-width="3"/><path d="M30,0 V40 M0,20 H60" stroke="#fff" stroke-width="9"/><path d="M30,0 V40 M0,20 H60" stroke="#C8102E" stroke-width="5"/></svg></span><span class="lang-name">English</span></button>
+<button class="lang-btn" onclick="setLang('de')"><span class="flag"><svg width="24" height="16" viewBox="0 0 60 40"><rect width="60" height="13.3" fill="#000"/><rect y="13.3" width="60" height="13.4" fill="#DD0000"/><rect y="26.7" width="60" height="13.3" fill="#FFCC00"/></svg></span><span class="lang-name">Deutsch</span></button>
 </div>
 </div>
 </div>
 
 <!-- MAIN FORM (hidden until language selected) -->
-<div class="amazon-bar" id="amazon-bar" style="display:none"><span class="logo">TAA-Team</span><span class="label" id="bar-label">Vertrauliches Hinweisgebersystem</span><button class="lang-switch" id="lang-switch" onclick="showLangScreen()">\u{1F1EC}\u{1F1E7}/\u{1F1E9}\u{1F1EA}</button></div>
-<div class="card" id="form-view" style="border-radius:0 0 16px 16px;margin-top:0;display:none">
+<div class="amazon-bar" id="amazon-bar" style="display:none"><span class="logo">amazon</span><span class="label" id="bar-label">TAA-Team</span><button class="lang-switch" id="lang-switch" onclick="showLangScreen()">EN / DE</button></div>
+<div class="card" id="form-view" style="display:none">
 <div class="header"><h1 id="form-title">Vorfall melden</h1><p id="form-subtitle">Melden Sie den Vorfall vertraulich an das TAA-Team.</p></div>
 <div class="field"><label id="lbl-login">Ihr Login / Alias *</label><input type="text" id="login"><div class="help" id="help-login">Damit wir bei R\u00fcckfragen Kontakt aufnehmen k\u00f6nnen</div></div>
 <div class="field"><label id="lbl-category">Kategorie *</label><select id="category"><option value="" id="opt-default">-- Bitte w\u00e4hlen --</option></select></div>
@@ -159,12 +161,14 @@ en:{
 function setLang(l){
   lang=l;
   document.getElementById("lang-screen").style.display="none";
+  document.getElementById("lang-bar").style.display="none";
   document.getElementById("amazon-bar").style.display="flex";
   document.getElementById("form-view").style.display="block";
   applyTranslations();
 }
 function showLangScreen(){
   document.getElementById("lang-screen").style.display="block";
+  document.getElementById("lang-bar").style.display="flex";
   document.getElementById("amazon-bar").style.display="none";
   document.getElementById("form-view").style.display="none";
   document.getElementById("success-view").style.display="none";
